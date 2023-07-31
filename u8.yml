@@ -1,0 +1,31 @@
+version: '3'
+services:
+  apache:
+    container_name: apache
+    restart: always
+    image: mostutw/php-u8
+    volumes:
+     - ./code:/var/www/html
+     - ./apache/conf:/etc/apache2/sites-available
+     - ./apache/log:/var/log/apache2
+     - ./apache/ssl:/etc/ssl/import
+     - ./mnt:/mnt
+    ports:
+     - 80:80
+     - 443:443
+  mysql:
+    container_name: mysql
+    restart: always
+    image: mysql:5.7.33
+    environment:
+      - "MYSQL_ROOT_PASSWORD=pass"
+      - "MYSQL_DATABASE=test"
+    volumes:
+      - mysql_volume:/var/lib/mysql
+      - ./mnt:/mnt
+    ports:
+      - 3306:3306
+    command: mysqld  --character-set-server=utf8 --collation-server=utf8_general_ci --init-connect='SET NAMES UTF8;' --innodb-flush-log-at-trx-commit=0
+
+volumes:
+  mysql_volume:
